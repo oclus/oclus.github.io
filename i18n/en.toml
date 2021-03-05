@@ -1,0 +1,23 @@
+[writtenBy]
+other = "Written by"
+
+[on]
+other = "on"
+
+[generator]
+other = "Made with <a href='https://gohugo.io'>Hugo</a>."
+
+[publishdate]
+other = "{{ .PublishDate.Format \"January 2, 2006\" }}"
+
+[subscribe]
+other = "Subscribe"
+
+[search]
+other = "Search"
+
+[socials]
+other = "Socials"
+
+[email]
+other = "Email"

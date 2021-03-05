@@ -36,3 +36,10 @@ FootnoteReturnLinkContents = "↑"
         "/css/whitespace.css",
         "/css/water.css",
     ]
+    github = "https://github.com/oclus"
+    reddit = ""
+    discord = ""
+    linkedin = ""
+    instagram = ""
+    facebook = ""
+    twitter = ""

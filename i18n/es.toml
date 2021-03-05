@@ -1,0 +1,23 @@
+[writtenBy]
+other = "Escrito por"
+
+[on]
+other = "el"
+
+[generator]
+other = "Hecho con <a href='https://gohugo.io'>Hugo</a> usando no tema</a>."
+
+[publishdate]
+other = "{{ .PublishDate.Day }} de {{ index $.Site.Data.months_es (printf \"%d\" .PublishDate.Month) }} de {{ .PublishDate.Year }}"
+
+[subscribe]
+other = "Suscríbete"
+
+[search]
+other = "Busca"
+
+[socials]
+other = "las redes sociales"
+
+[email]
+other = "Email"

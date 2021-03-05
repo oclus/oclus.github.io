@@ -1,0 +1,23 @@
+[writtenBy]
+other = "作者:"
+
+[on]
+other = "公開日:"
+
+[generator]
+other = "テーマなしを使用してHugoで作成。"
+
+[publishdate]
+other = "年{{.PublishDate.Year}} 月{{.PublishDate.Month}} 日{{.PublishDate.Day}}"
+
+[subscribe]
+other = "申し込み"
+
+[search]
+other = "検索"
+
+[socials]
+other = "SNS"
+
+[email]
+other = "メール"
