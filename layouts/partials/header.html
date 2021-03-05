@@ -1,0 +1,16 @@
+<nav>
+    <div class="row">
+        <div class="col-1_2">
+            <a href="{{`/` | relURL}}">
+                <h1>{{.Site.Title}}</h1>
+            </a>
+        </div>
+        <div class="col-1_2">
+            <form class="search">
+                <input class="f-fit" type="search" placeholder="Search" aria-label="Search">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">{{partial "header-menu.html" .}}</div>
+</nav>

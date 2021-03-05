@@ -1,0 +1,26 @@
+{{define "main"}}
+
+<main>
+	<div class="single">
+		<div><h5>{{partial "single/title.html" .}}</h5></div>
+		<div>{{partial "single/post-info.html" .}}</div>
+		<div>
+			{{partial "single/header.html" .}} 
+			<p>{{.Content}}</p>
+
+			<div>{{partial "single/footer.html" .}}</div>
+		</div>
+	</div>
+
+	{{/* This is the pagination of every post */}}
+	<nav>
+		<ul class="ul-ctnr">
+			{{if .PrevPage}}<li class="no-br p-w-2em"><a href="{{.PrevPage.RelPermalink}}">&#8592;Previous</a></li>{{end}}
+			<li class="no-br p-w-2em"><a href="#">Top</a></li>
+			{{if .NextPage}}<li class="no-br p-w-2em"><a href="{{.NextPage.RelPermalink}}">Next&#8594;</a></li>{{end}}
+		</ul>
+	</nav>
+
+</main>
+
+{{end}}

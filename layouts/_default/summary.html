@@ -1,0 +1,10 @@
+<a href="{{ .Permalink }}" class="card-a">
+    <div class="card">
+        <div class="bg-img"><img class="center-div" src="{{ `images/holdup.jpg` | relURL }}" alt="..."></div>
+        <div class="card-summary">
+            <h1>{{ .Title }}</h1>
+            <p>{{ if isset .Params "summary" }}{{ .Params.Summary | markdownify }}{{ else }}{{ .Summary | markdownify }}{{ end }}</p>
+            <p><small><time datetime="{{ .PublishDate }}">{{ i18n "publishdate" . }}</time></small></p>
+        </div>
+    </div>
+</a>

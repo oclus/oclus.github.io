@@ -1,0 +1,6 @@
+<ul class="ul-ctnr">
+    {{ $currentPage := . }}
+    {{ range .Site.Menus.main }}
+    <li class="no-br p-w-2em"><a href="{{ .URL }}" title="{{ .Title }}">{{ .Name }}</a></li>
+    {{ end }}
+</ul>

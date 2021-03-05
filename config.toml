@@ -1,0 +1,36 @@
+baseURL = "https://oclus.github.com/"
+languageCode = "en-us"
+title = "Oclus"
+FootnoteReturnLinkContents = "↑"
+[author]
+    name = "gocs"
+    description = "hellow"
+
+# partials/header-menu.html
+[menu]
+
+    [[menu.main]]
+        identifier = "about"
+        name = "about"
+        title = "about section"
+        url = "/about"
+        weight = -110
+
+    [[menu.main]]
+        identifier = "posts"
+        name = "posts"
+        title = "posts section"
+        url = "/posts/"
+        weight = -110
+
+[params]
+    description = "hello, google.com!"
+    # partials/head.html
+    css = [
+        "/css/color.css",
+        "/css/summary.css",
+        "/css/single.css",
+        "/css/fonts.css",
+        "/css/whitespace.css",
+        "/css/water.css",
+    ]

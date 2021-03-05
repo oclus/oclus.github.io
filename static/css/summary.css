@@ -1,0 +1,24 @@
+/**
+ * summary is the div inside an anchor of the
+ * homepage.
+ */
+
+.card-a,
+.card-a:hover {
+    text-decoration: none;
+}
+
+.card {
+    margin: 2em 0;
+    background-color: #ffffff06;
+    border: .5em solid #00000012;
+}
+
+.card:hover {
+    background-color: #ffffff12;
+    border: .5em solid #00000032;
+}
+
+.card-summary {
+    padding: 2em 2em;
+}

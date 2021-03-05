@@ -1,0 +1,12 @@
+/* These snippets are dedicated internally for single.html */
+
+.single {
+    margin: 2em 0;
+    padding: 2em;
+    background-color: #ffffff12;
+    border: .5em solid #00000032;
+}
+
+.single-info {
+    color: #ffffffab;
+}

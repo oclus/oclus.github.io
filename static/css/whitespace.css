@@ -1,0 +1,83 @@
+/**
+ * whitepace.css offers classes to manipulate their placements
+ */
+
+/* .no-br is used to prevent forms to break the line */
+.no-br {
+    display: inline;
+}
+
+.fill-width {
+    width: 300px;
+}
+
+.p-w-2em {
+    padding: 0 2em;
+}
+
+.p-l-2em {
+    padding-left: 2em;
+}
+
+.p-r-2em {
+    padding-right: 2em;
+}
+
+.p-l-1em {
+    padding-left: 1em;
+}
+
+.p-r-1em {
+    padding-right: 1em;
+}
+
+.p-h-2em {
+    padding: 2em 0;
+}
+
+.center-div {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ul-ctnr {
+    text-align: center;
+}
+
+/* ideally same as Site Title */
+form.search, form.email  {
+    margin-top: 36px;
+    width: 100%;
+    display: flex;
+}
+
+.f-fit {
+    flex: 1 0 auto;
+}
+
+/* Grid */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-1_2 {
+    flex: 50%;
+    max-width: 50%;
+}
+
+.col-1_4 {
+    flex: 25%;
+    max-width: 25%;
+}
+
+.col-3_4 {
+    flex: 75%;
+    max-width: 75%;
+}
+
+.col-1_3 {
+    flex: 33.33%;
+    max-width: 33.33%;
+}

@@ -1,0 +1,16 @@
+{{ define "main" }}
+
+<main>
+	<div id="taxonomy" class="container my-5">
+		<h1>{{ strings.FirstUpper .Data.Singular }} "{{ .Title }}"</h1>
+		<div class="catalogue">
+			{{ range (.Paginate .Pages).Pages }}
+			{{ .Render "summary" }}
+			{{ end }}
+		</div>
+	</div>
+
+	{{ partial "single/pagination.html" . }}
+</main>
+
+{{ end }}

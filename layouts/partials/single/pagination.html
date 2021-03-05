@@ -1,0 +1,9 @@
+{{/* This is the pagination of the home page */}}
+
+<nav>
+    <ul class="ul-ctnr">
+        {{if .Paginator.HasPrev}}<li class="no-br"><a href="{{ .Paginator.Prev.URL }}">&#8592;Previous</a></li> |{{end}}
+        <li class="no-br"><a href="#" >{{ .Paginator.PageNumber }}</a></li>
+        {{if .Paginator.HasNext}}| <li class="no-br"><a href="{{ .Paginator.Next.URL }}">Next&#8594;</a></li>{{end}}
+    </ul>
+</nav>

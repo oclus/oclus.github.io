@@ -1,0 +1,15 @@
+{{ define "main" }}
+
+<main>
+	{{ partial "index/introduction.html" . }}
+
+	<div>
+		{{ range (.Paginate .Site.RegularPages).Pages }}
+		{{ .Render "summary" }}
+		{{ end }}
+	</div>
+
+	{{ partial "single/pagination.html" . }}
+</main>
+
+{{ end }}
