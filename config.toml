@@ -1,6 +1,8 @@
 baseURL = "https://oclus.github.com/"
 languageCode = "en-us"
 title = "Oclus"
+
+publishdir = "docs"
 FootnoteReturnLinkContents = "↑"
 [author]
     name = "gocs"
