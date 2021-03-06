@@ -15,6 +15,12 @@ run in local: `hugo serve -D`
 
 build static files: `hugo`
 
+or:
+
+```
+make build
+```
+
 ## Output
 
 https://oclus.github.io/
