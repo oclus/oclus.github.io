@@ -36,9 +36,8 @@
             </a>
         </div>
         <div class="col-1_2">
-            <form class="search">
-                <input class="f-fit" type="search" placeholder='Search' aria-label='Search'>
-                <button type="submit">Search</button>
+            <form class="search" action="/search" method="GET">
+                <input class="f-fit" id="search" type="search" placeholder='Search' aria-label='Search'>
             </form>
         </div>
     </div>
@@ -51,6 +50,118 @@
     
 </ul>
 </div>
+    <div>
+    <ul id="results"></ul>
+</div>
+
+<script type="text/javascript" src="js/vendor/lunr.min.js"></script>
+<script type="text/javascript">
+    var lunrIndex,
+        $results,
+        pagesIndex;
+
+    
+    function initLunr() {
+        var request = new XMLHttpRequest();
+        request.open('GET', 'js/lunr/pages-index.json', true);
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+
+                pagesIndex = JSON.parse(request.responseText);
+
+                
+                
+                lunrIndex = lunr(function() {
+                    this.field("title", {
+                        boost: 10
+                    });
+                    this.field("tags", {
+                        boost: 5
+                    });
+                    this.field("content");
+
+                    
+                    this.ref("href");
+                    for (var i = 0; i < pagesIndex.length; ++i) {
+                        this.add(pagesIndex[i]);
+                    }
+                });
+            } else {
+                var err = textStatus + ", " + error;
+                console.error("Error getting Hugo index flie:", err);
+            }
+        };
+
+        request.send();
+    }
+
+    
+    function initUI() {
+        $results = document.getElementById("results");
+        $search = document.getElementById("search");
+        $search.onkeyup = function() {
+            while ($results.firstChild) {
+                $results.removeChild($results.firstChild);
+            }
+
+            
+            var query = $search.value;
+            if (query.length < 2) {
+                return;
+            }
+
+            
+            var fuzzLength = Math.round(Math.min(Math.max(query.length / 4, 1), 3));
+            var fuzzyQuery = query + '~' + fuzzLength;
+
+            var results = search(fuzzyQuery);
+            renderResults(results);
+        };
+    }
+
+    
+
+    function search(query) {
+        
+        
+        
+        
+        
+        return lunrIndex.search(query).map(function(result) {
+            return pagesIndex.filter(function(page) {
+                return page.href === result.ref;
+            })[0];
+        });
+    }
+
+    
+
+    function renderResults(results) {
+        if (!results.length) {
+            return;
+        }
+
+        
+        $results = document.getElementById("results");
+        results.slice(0, 10).forEach(function(result) {
+            var li = document.createElement('li');
+            var ahref = document.createElement('a');
+            ahref.href = result.href;
+            ahref.setAttribute("class", "card-a");
+            ahref.innerHTML = `<div class="card"><div class="card-summary"><h1>${result.title}</h1><p>${result.content}</p></div></div>`;
+            li.append(ahref);
+            $results.appendChild(li);
+        });
+    }
+
+    
+    initLunr();
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initUI();
+    })
+</script>
 </nav>
     
 
@@ -59,6 +170,20 @@
 <div class="bg-img"><img class="center-div" src="/images/no-image.png" alt="..."></div>
 
 	<div>
+		
+		<a href="https://oclus.github.com/post/my-grunt-hugo-lunrjs-take/" class="card-a">
+    <div class="card">
+        <div class="bg-img"><img class="center-div" src="/images/holdup.jpg" alt="..."></div>
+        <div class="card-summary">
+            <h1>My Grunt Hugo Lunrjs Take</h1>
+            <p>This tutorial is based on sebz’s Hugo search tutorial among others in the comment section with my own minor modification for this blog site.
+How to implement a custom search for Hugo usig Gruntjs and Lunrjs.
+Requirements Install the following tools:
+Nodejs Gruntjs  Install npm install &ndash;save-dev grunt-cli to save the Grunt binary locally, and add the script below to run npm run index for generating the index json file when updating contents folder.</p>
+            <p><small><time datetime="2021-03-07 01:27:15 &#43;0800 &#43;08">March 7, 2021</time></small></p>
+        </div>
+    </div>
+</a>
 		
 	</div>
 
@@ -79,7 +204,7 @@
 		        <div class="col-1_2 p-h-2em">
 		            <div class="row p-l-2em p-r-1em">
 		                <span>
-		                    &copy; <time datetime="2021-03-06 14:28:30.9823954 &#43;0800 &#43;08 m=&#43;0.267301701">2021</time> gocs.
+		                    &copy; <time datetime="2021-03-07 02:08:08.2845461 &#43;0800 &#43;08 m=&#43;0.383920301">2021</time> gocs.
 		                    Made with <a href='https://gohugo.io'>Hugo</a>.
 		                </span>
 		            </div>
@@ -106,8 +231,7 @@
 		        </div>
 		    </div>
 		</footer>
-    <script src="/js/get-search.js"></script>
-
+    
 </body>
 
 </html>

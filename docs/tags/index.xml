@@ -5,6 +5,25 @@
     <link>https://oclus.github.com/tags/</link>
     <description>Recent content in Tags on Oclus</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://oclus.github.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Sun, 07 Mar 2021 01:27:15 +0800</lastBuildDate><atom:link href="https://oclus.github.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>hugo</title>
+      <link>https://oclus.github.com/tags/hugo/</link>
+      <pubDate>Sun, 07 Mar 2021 01:27:15 +0800</pubDate>
+      
+      <guid>https://oclus.github.com/tags/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tutorial</title>
+      <link>https://oclus.github.com/tags/tutorial/</link>
+      <pubDate>Sun, 07 Mar 2021 01:27:15 +0800</pubDate>
+      
+      <guid>https://oclus.github.com/tags/tutorial/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

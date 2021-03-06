@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Grunt Hugo Lunrjs Take &middot; Oclus</title>
+
+    
+    <link rel="stylesheet" href="/css/color.css">
+    <link rel="stylesheet" href="/css/summary.css">
+    <link rel="stylesheet" href="/css/single.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/whitespace.css">
+    <link rel="stylesheet" href="/css/water.css">
+    
+
+
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+    <link href="" rel="alternate" type="application/rss+xml" title="Oclus" />
+</head>
+
+<body>
+    <nav>
+    <div class="row">
+        <div class="col-1_2">
+            <a href="/">
+                <h1>Oclus</h1>
+            </a>
+        </div>
+        <div class="col-1_2">
+            <form class="search" action="/search" method="GET">
+                <input class="f-fit" id="search" type="search" placeholder='Search' aria-label='Search'>
+            </form>
+        </div>
+    </div>
+    <div class="row"><ul class="ul-ctnr">
+    
+    
+    <li class="no-br p-w-2em"><a href="/about" title="about section">about</a></li>
+    
+    <li class="no-br p-w-2em"><a href="/posts/" title="posts section">posts</a></li>
+    
+</ul>
+</div>
+    <div>
+    <ul id="results"></ul>
+</div>
+
+<script type="text/javascript" src="js/vendor/lunr.min.js"></script>
+<script type="text/javascript">
+    var lunrIndex,
+        $results,
+        pagesIndex;
+
+    
+    function initLunr() {
+        var request = new XMLHttpRequest();
+        request.open('GET', 'js/lunr/pages-index.json', true);
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+
+                pagesIndex = JSON.parse(request.responseText);
+
+                
+                
+                lunrIndex = lunr(function() {
+                    this.field("title", {
+                        boost: 10
+                    });
+                    this.field("tags", {
+                        boost: 5
+                    });
+                    this.field("content");
+
+                    
+                    this.ref("href");
+                    for (var i = 0; i < pagesIndex.length; ++i) {
+                        this.add(pagesIndex[i]);
+                    }
+                });
+            } else {
+                var err = textStatus + ", " + error;
+                console.error("Error getting Hugo index flie:", err);
+            }
+        };
+
+        request.send();
+    }
+
+    
+    function initUI() {
+        $results = document.getElementById("results");
+        $search = document.getElementById("search");
+        $search.onkeyup = function() {
+            while ($results.firstChild) {
+                $results.removeChild($results.firstChild);
+            }
+
+            
+            var query = $search.value;
+            if (query.length < 2) {
+                return;
+            }
+
+            
+            var fuzzLength = Math.round(Math.min(Math.max(query.length / 4, 1), 3));
+            var fuzzyQuery = query + '~' + fuzzLength;
+
+            var results = search(fuzzyQuery);
+            renderResults(results);
+        };
+    }
+
+    
+
+    function search(query) {
+        
+        
+        
+        
+        
+        return lunrIndex.search(query).map(function(result) {
+            return pagesIndex.filter(function(page) {
+                return page.href === result.ref;
+            })[0];
+        });
+    }
+
+    
+
+    function renderResults(results) {
+        if (!results.length) {
+            return;
+        }
+
+        
+        $results = document.getElementById("results");
+        results.slice(0, 10).forEach(function(result) {
+            var li = document.createElement('li');
+            var ahref = document.createElement('a');
+            ahref.href = result.href;
+            ahref.setAttribute("class", "card-a");
+            ahref.innerHTML = `<div class="card"><div class="card-summary"><h1>${result.title}</h1><p>${result.content}</p></div></div>`;
+            li.append(ahref);
+            $results.appendChild(li);
+        });
+    }
+
+    
+    initLunr();
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initUI();
+    })
+</script>
+</nav>
+    
+
+<main>
+	<div class="single">
+		<div><h5><h1>My Grunt Hugo Lunrjs Take</h1>
+<div></div></h5></div>
+		<div><div class="single-info">
+    <span>Written by</span>
+        <a href="#"></a>
+        
+        <span>on&nbsp;</span><a href="#"><time datetime="2021-03-07 01:27:15 &#43;0800 &#43;08">March 7, 2021</time></a>
+</div></div>
+		<div>
+			
+
+<a href="/tags/tutorial"><span>tutorial</span></a>
+
+<a href="/tags/hugo"><span>hugo</span></a>
+ 
+			<p><p>This tutorial is based on <a href="https://gist.github.com/sebz/efddfc8fdcb6b480f567">sebz&rsquo;s Hugo search tutorial</a> among others in the comment section with my own minor modification for this blog site.</p>
+<blockquote>
+<p>How to implement a custom search for <a href="http://gohugo.io">Hugo</a> usig <a href="http://gruntjs.com">Gruntjs</a> and <a href="http://lunrjs.com">Lunrjs</a>.</p>
+</blockquote>
+<h2 id="requirements">Requirements</h2>
+<p>Install the following tools:</p>
+<ul>
+<li><a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">Nodejs</a></li>
+<li><a href="http://gruntjs.com/getting-started">Gruntjs</a></li>
+</ul>
+<p>Install <code>npm install --save-dev grunt-cli</code> to save the Grunt binary locally, and add the script below to run <code>npm run index</code> for generating the index json file when updating contents folder.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">    <span style="color:#960050;background-color:#1e0010">...</span>
+    <span style="color:#e6db74">&#34;scripts&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+        <span style="color:#f92672">&#34;index&#34;</span>: <span style="color:#e6db74">&#34;node_modules/.bin/grunt lunr-index&#34;</span>
+    }<span style="color:#960050;background-color:#1e0010">,</span>
+    <span style="color:#960050;background-color:#1e0010">...</span>
+</code></pre></div><h2 id="setup">Setup</h2>
+<h3 id="project-organization">Project organization</h3>
+<p>Here is my Hugo based website project structure</p>
+<pre><code>    oclus.github.io/ &lt;= Hugo project root folder
+        |- content/
+        |- layout/
+        |- static/
+            |- js/
+                |- lunr/ &lt;= Where we generate the lunr json index file
+                |- vendor/
+                    |- lunrjs.min.js &lt;= lunrjs library
+                |- ...
+        |- config.yaml
+        |- ...
+        |- Gruntfile.js &lt;= Where the magic happens
+        |- package.json &lt;= Dependencies declaration required to build the index
+        |- ...
+</code></pre><h3 id="install-the-nodejs-dependencies">Install the Nodejs dependencies</h3>
+<p>From the project root folder launch <code>npm install --save-dev grunt string yaml</code></p>
+<ul>
+<li><a href="http://stringjs.com/">string</a> &lt;= do almost all the work</li>
+<li><a href="https://www.npmjs.com/package/yamljs">yamljs</a>
+<ul>
+<li>Used to parse the Frontmatter, mine is in YAML</li>
+</ul>
+</li>
+</ul>
+<h2 id="time-to-work">Time to work</h2>
+<h3 id="the-principle">The principle</h3>
+<p>We will work both at buildtime and runtime. With Gruntjs (buildtime), we&rsquo;ll generate a JSON index file and with a small js script (runtime) initilize and use lunrjs.</p>
+<h3 id="build-the-lunr-index-file">Build the Lunr index file</h3>
+<p>Lunrjs allows you to define fields to describe your pages (documents in lunrjs terms) that will be used to search and hopefully find stuff. The index file is basically a JSON file corresponding to an array of all the documents (pages) composing the website.</p>
+<p>Here are the fields I chose to describe my pages:</p>
+<ul>
+<li><code>title</code> &lt;=&gt; Frontmatter title or file name</li>
+<li><code>tags</code> &lt;=&gt; Frontmatter tags or nothing</li>
+<li><code>content</code> &lt;=&gt; File content</li>
+<li><code>ref</code> &lt;=&gt; Reworked file path used as absolute URL</li>
+</ul>
+<h4 id="workflow">Workflow</h4>
+<ol>
+<li>Recursively walk through all files of the <code>content</code> folder</li>
+<li>Two possibilities
+<ol>
+<li>Markdown file
+<ol>
+<li>Parse the Frontmatter to extract the <code>title</code> and the <code>tags</code></li>
+<li>Parse and clean the content</li>
+</ol>
+</li>
+<li>HTML file
+<ol>
+<li>Parse and clean the content</li>
+<li>Use the file name as <code>title</code></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Use the path file as <code>ref</code> (link toward the page)</li>
+</ol>
+<h4 id="show-me-the-code">Show me the code!</h4>
+<p>Here is the <code>Gruntfile.js</code> file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">yaml</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#34;yamljs&#34;</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">S</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#34;string&#34;</span>);
+
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">CONTENT_PATH_PREFIX</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;content&#34;</span>;
+
+<span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">grunt</span>) {
+
+    <span style="color:#a6e22e">grunt</span>.<span style="color:#a6e22e">registerTask</span>(<span style="color:#e6db74">&#34;lunr-index&#34;</span>, <span style="color:#66d9ef">function</span>() {
+
+        <span style="color:#a6e22e">grunt</span>.<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">writeln</span>(<span style="color:#e6db74">&#34;Build pages index&#34;</span>);
+
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">indexPages</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">pagesIndex</span> <span style="color:#f92672">=</span> [];
+            <span style="color:#a6e22e">grunt</span>.<span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">recurse</span>(<span style="color:#a6e22e">CONTENT_PATH_PREFIX</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">abspath</span>, <span style="color:#a6e22e">rootdir</span>, <span style="color:#a6e22e">subdir</span>, <span style="color:#a6e22e">filename</span>) {
+                <span style="color:#a6e22e">grunt</span>.<span style="color:#a6e22e">verbose</span>.<span style="color:#a6e22e">writeln</span>(<span style="color:#e6db74">&#34;Parse file:&#34;</span>,<span style="color:#a6e22e">abspath</span>);
+                <span style="color:#a6e22e">pagesIndex</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">processFile</span>(<span style="color:#a6e22e">abspath</span>, <span style="color:#a6e22e">filename</span>));
+            });
+
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pagesIndex</span>;
+        };
+
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">processFile</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">abspath</span>, <span style="color:#a6e22e">filename</span>) {
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">pageIndex</span>;
+
+            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">S</span>(<span style="color:#a6e22e">filename</span>).<span style="color:#a6e22e">endsWith</span>(<span style="color:#e6db74">&#34;.html&#34;</span>)) {
+                <span style="color:#a6e22e">pageIndex</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">processHTMLFile</span>(<span style="color:#a6e22e">abspath</span>, <span style="color:#a6e22e">filename</span>);
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#a6e22e">pageIndex</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">processMDFile</span>(<span style="color:#a6e22e">abspath</span>, <span style="color:#a6e22e">filename</span>);
+            }
+
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pageIndex</span>;
+        };
+
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">processHTMLFile</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">abspath</span>, <span style="color:#a6e22e">filename</span>) {
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">grunt</span>.<span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">read</span>(<span style="color:#a6e22e">abspath</span>);
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">pageName</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">S</span>(<span style="color:#a6e22e">filename</span>).<span style="color:#a6e22e">chompRight</span>(<span style="color:#e6db74">&#34;.html&#34;</span>).<span style="color:#a6e22e">s</span>;
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">S</span>(<span style="color:#a6e22e">abspath</span>)
+                .<span style="color:#a6e22e">chompLeft</span>(<span style="color:#a6e22e">CONTENT_PATH_PREFIX</span>).<span style="color:#a6e22e">s</span>;
+            <span style="color:#66d9ef">return</span> {
+                <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">pageName</span>,
+                <span style="color:#a6e22e">href</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">href</span>,
+                <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">S</span>(<span style="color:#a6e22e">content</span>).<span style="color:#a6e22e">trim</span>().<span style="color:#a6e22e">stripTags</span>().<span style="color:#a6e22e">stripPunctuation</span>().<span style="color:#a6e22e">s</span>
+            };
+        };
+
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">processMDFile</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">abspath</span>, <span style="color:#a6e22e">filename</span>) {
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">grunt</span>.<span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">read</span>(<span style="color:#a6e22e">abspath</span>);
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">pageIndex</span>;
+            <span style="color:#75715e">// First separate the Front Matter from the content and parse it
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// Note that yaml is `---`
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">content</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;---&#34;</span>);
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">frontMatter</span>;
+            <span style="color:#66d9ef">try</span> {
+                <span style="color:#a6e22e">frontMatter</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">yaml</span>.<span style="color:#a6e22e">parse</span>(<span style="color:#a6e22e">content</span>[<span style="color:#ae81ff">1</span>].<span style="color:#a6e22e">trim</span>());
+            } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">e</span>) {
+                <span style="color:#a6e22e">conzole</span>.<span style="color:#a6e22e">failed</span>(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">message</span>);
+            }
+
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">S</span>(<span style="color:#a6e22e">abspath</span>).<span style="color:#a6e22e">chompLeft</span>(<span style="color:#a6e22e">CONTENT_PATH_PREFIX</span>).<span style="color:#a6e22e">chompRight</span>(<span style="color:#e6db74">&#34;.md&#34;</span>).<span style="color:#a6e22e">s</span>;
+            <span style="color:#75715e">// href for index.md files stops at the folder name
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">filename</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;index.md&#34;</span>) {
+                <span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">S</span>(<span style="color:#a6e22e">abspath</span>).<span style="color:#a6e22e">chompLeft</span>(<span style="color:#a6e22e">CONTENT_PATH_PREFIX</span>).<span style="color:#a6e22e">chompRight</span>(<span style="color:#a6e22e">filename</span>).<span style="color:#a6e22e">s</span>;
+            }
+
+            <span style="color:#75715e">// Build Lunr index for this page
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">pageIndex</span> <span style="color:#f92672">=</span> {
+                <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">frontMatter</span>.<span style="color:#a6e22e">title</span>,
+                <span style="color:#a6e22e">tags</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">frontMatter</span>.<span style="color:#a6e22e">tags</span>,
+                <span style="color:#a6e22e">href</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">href</span>,
+                <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">S</span>(<span style="color:#a6e22e">content</span>[<span style="color:#ae81ff">2</span>]).<span style="color:#a6e22e">trim</span>().<span style="color:#a6e22e">stripTags</span>().<span style="color:#a6e22e">stripPunctuation</span>().<span style="color:#a6e22e">s</span>
+            };
+
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pageIndex</span>;
+        };
+
+        <span style="color:#a6e22e">grunt</span>.<span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#34;site/static/js/lunr/pages-index.json&#34;</span>, <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">indexPages</span>()));
+        <span style="color:#a6e22e">grunt</span>.<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">ok</span>(<span style="color:#e6db74">&#34;Index built&#34;</span>);
+    });
+};
+
+</code></pre></div><p>The index file is similar like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">[{
+    <span style="color:#e6db74">&#34;title&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Page1&#34;</span>,
+    <span style="color:#e6db74">&#34;href&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;/section/page1&#34;</span>,
+    <span style="color:#e6db74">&#34;content&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34; This is the cleaned content of &#39;site/content/section/page1.md&#39; &#34;</span>
+}, {
+    <span style="color:#e6db74">&#34;title&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Page2&#34;</span>,
+    <span style="color:#e6db74">&#34;tags&#34;</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;tag1&#34;</span>, <span style="color:#e6db74">&#34;tag2&#34;</span>, <span style="color:#e6db74">&#34;tag3&#34;</span>],
+    <span style="color:#e6db74">&#34;href&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;/section/page2&#34;</span>,
+    <span style="color:#e6db74">&#34;content&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34; This is the cleaned content of &#39;site/content/section/page2.md&#39; &#34;</span>
+}, {
+    <span style="color:#e6db74">&#34;title&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Page3&#34;</span>,
+    <span style="color:#e6db74">&#34;href&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;/section/page3&#34;</span>,
+    <span style="color:#e6db74">&#34;content&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34; This is the cleaned content of &#39;site/content/section/page3.md&#39; &#34;</span>
+}]
+</code></pre></div><p>Launch the task <code>npm run index</code> to auto-generate the <code>pages-index.json</code> file</p>
+<h3 id="use-the-index">Use the index</h3>
+<p>Paste this client-side snippet where there should be <code>&lt;input id=&quot;search&quot; ...&gt;</code> and <code>&lt;ul id=&quot;results&quot;&gt;&lt;/ul&gt;</code>.
+Make sure the following below are all in the same page.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">...
+&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;search&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text&#34;</span>&gt;
+...
+&lt;<span style="color:#f92672">ul</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;results&#34;</span>&gt;&lt;/<span style="color:#f92672">ul</span>&gt;
+...
+&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;js/vendor/lunr.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">lunrIndex</span>,
+        <span style="color:#a6e22e">$results</span>,
+        <span style="color:#a6e22e">pagesIndex</span>;
+
+    <span style="color:#75715e">// Initialize lunrjs using our generated index file
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">initLunr</span>() {
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">request</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">XMLHttpRequest</span>();
+        <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">open</span>(<span style="color:#e6db74">&#39;GET&#39;</span>, <span style="color:#e6db74">&#39;js/lunr/pages-index.json&#39;</span>, <span style="color:#66d9ef">true</span>);
+
+        <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">onload</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">status</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">200</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">status</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">400</span>) {
+
+                <span style="color:#a6e22e">pagesIndex</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">parse</span>(<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">responseText</span>);
+
+                <span style="color:#75715e">// Set up lunrjs by declaring the fields we use
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">// Also provide their boost level for the ranking
+</span><span style="color:#75715e"></span>                <span style="color:#a6e22e">lunrIndex</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">lunr</span>(<span style="color:#66d9ef">function</span>() {
+                    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">field</span>(<span style="color:#e6db74">&#34;title&#34;</span>, {
+                        <span style="color:#a6e22e">boost</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>
+                    });
+                    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">field</span>(<span style="color:#e6db74">&#34;tags&#34;</span>, {
+                        <span style="color:#a6e22e">boost</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span>
+                    });
+                    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">field</span>(<span style="color:#e6db74">&#34;content&#34;</span>);
+
+                    <span style="color:#75715e">// ref is the result item identifier (I chose the page URL)
+</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">ref</span>(<span style="color:#e6db74">&#34;href&#34;</span>);
+                    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">pagesIndex</span>.<span style="color:#a6e22e">length</span>; <span style="color:#f92672">++</span><span style="color:#a6e22e">i</span>) {
+                        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">pagesIndex</span>[<span style="color:#a6e22e">i</span>]);
+                    }
+                });
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">textStatus</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">error</span>;
+                <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#e6db74">&#34;Error getting Hugo index flie:&#34;</span>, <span style="color:#a6e22e">err</span>);
+            }
+        };
+
+        <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">send</span>();
+    }
+
+    <span style="color:#75715e">// Nothing crazy here, just hook up a event handler on the input field
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">initUI</span>() {
+        <span style="color:#a6e22e">$results</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#34;results&#34;</span>);
+        <span style="color:#a6e22e">$search</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#34;search&#34;</span>);
+        <span style="color:#a6e22e">$search</span>.<span style="color:#a6e22e">onkeyup</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+            <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">$results</span>.<span style="color:#a6e22e">firstChild</span>) {
+                <span style="color:#a6e22e">$results</span>.<span style="color:#a6e22e">removeChild</span>(<span style="color:#a6e22e">$results</span>.<span style="color:#a6e22e">firstChild</span>);
+            }
+
+            <span style="color:#75715e">// Only trigger a search when 2 chars. at least have been provided
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">query</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$search</span>.<span style="color:#a6e22e">value</span>;
+            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>) {
+                <span style="color:#66d9ef">return</span>;
+            }
+
+            <span style="color:#75715e">//add some fuzzyness to the string matching to help with spelling mistakes.
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">fuzzLength</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">round</span>(Math.<span style="color:#a6e22e">min</span>(Math.<span style="color:#a6e22e">max</span>(<span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">1</span>), <span style="color:#ae81ff">3</span>));
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">fuzzyQuery</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">query</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;~&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">fuzzLength</span>;
+
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">results</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">search</span>(<span style="color:#a6e22e">fuzzyQuery</span>);
+            <span style="color:#a6e22e">renderResults</span>(<span style="color:#a6e22e">results</span>);
+        };
+    }
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Trigger a search in lunr and transform the result
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param  {String} query
+</span><span style="color:#75715e">     * @return {Array}  results
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">search</span>(<span style="color:#a6e22e">query</span>) {
+        <span style="color:#75715e">// Find the item in our index corresponding to the lunr one to have more info
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Lunr result: 
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//  {ref: &#34;/section/page1&#34;, score: 0.2725657778206127}
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Our result:
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//  {title:&#34;Page1&#34;, href:&#34;/section/page1&#34;, ...}
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">lunrIndex</span>.<span style="color:#a6e22e">search</span>(<span style="color:#a6e22e">query</span>).<span style="color:#a6e22e">map</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">result</span>) {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pagesIndex</span>.<span style="color:#a6e22e">filter</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">page</span>) {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">href</span> <span style="color:#f92672">===</span> <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">ref</span>;
+            })[<span style="color:#ae81ff">0</span>];
+        });
+    }
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Display the 10 first results
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param  {Array} results to display
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">renderResults</span>(<span style="color:#a6e22e">results</span>) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">length</span>) {
+            <span style="color:#66d9ef">return</span>;
+        }
+
+        <span style="color:#75715e">// Only show the ten first results
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">$results</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#34;results&#34;</span>);
+        <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">slice</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10</span>).<span style="color:#a6e22e">forEach</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">result</span>) {
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">li</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#39;li&#39;</span>);
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">ahref</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#39;a&#39;</span>);
+            <span style="color:#a6e22e">ahref</span>.<span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">href</span>;
+
+            <span style="color:#75715e">// design your list if necessary
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">ahref</span>.<span style="color:#a6e22e">text</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">title</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> - </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">content</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>;
+            <span style="color:#a6e22e">li</span>.<span style="color:#a6e22e">append</span>(<span style="color:#a6e22e">ahref</span>);
+            <span style="color:#a6e22e">$results</span>.<span style="color:#a6e22e">appendChild</span>(<span style="color:#a6e22e">li</span>);
+        });
+    }
+
+    <span style="color:#75715e">// Let&#39;s get started
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">initLunr</span>();
+
+    document.<span style="color:#a6e22e">addEventListener</span>(<span style="color:#e6db74">&#34;DOMContentLoaded&#34;</span>, <span style="color:#66d9ef">function</span>() {
+        <span style="color:#a6e22e">initUI</span>();
+    })
+&lt;/<span style="color:#f92672">script</span>&gt;
+</code></pre></div><p>This post is unlicensed following the original post, so, feel free to copy paste.</p>
+</p>
+
+			<div></div>
+		</div>
+	</div>
+
+	
+	<nav>
+		<ul class="ul-ctnr">
+			
+			<li class="no-br p-w-2em"><a href="#">Top</a></li>
+			
+		</ul>
+	</nav>
+
+</main>
+
+
+    		<footer class="container">
+		    <div class="row">
+		        <div class="col-1_2 p-h-2em">
+		            <div class="row p-l-2em p-r-1em">
+		                <span>
+		                    &copy; <time datetime="2021-03-07 02:08:08.2828969 &#43;0800 &#43;08 m=&#43;0.382271001">2021</time> gocs.
+		                    Made with <a href='https://gohugo.io'>Hugo</a>.
+		                </span>
+		            </div>
+		            <div class="row p-l-2em p-r-1em">
+		                <form class="email">
+		                    <input class="f-fit" type="email" placeholder='Email' aria-label="Email">
+		                    <button type="submit">Subscribe</button>
+		                </form>
+		            </div>
+		        </div>
+		        <div class="col-1_2">
+		            <div class="row p-l-1em p-r-2em">
+		                <h5>Socials</h5>
+		                <ul>
+		                    <li><a href="https://github.com/oclus">Github</a></li>
+		                    <li><a href="#">Reddit</a></li>
+		                    <li><a href="#">Discord</a></li>
+		                    <li><a href="#">LinkedIn</a></li>
+		                    <li><a href="#">No Facebook</a></li>
+		                    <li><a href="#">No Instagram</a></li>
+		                    <li><a href="#">No Twitter</a></li>
+		                </ul>
+		            </div>
+		        </div>
+		    </div>
+		</footer>
+    
+</body>
+
+</html>

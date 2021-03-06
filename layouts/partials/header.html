@@ -6,11 +6,11 @@
             </a>
         </div>
         <div class="col-1_2">
-            <form class="search">
-                <input class="f-fit" type="search" placeholder='{{ i18n "search" }}' aria-label='{{ i18n "search" }}'>
-                <button type="submit">{{ i18n "search" }}</button>
+            <form class="search" action="/search" method="GET">
+                <input class="f-fit" id="search" type="search" placeholder='{{ i18n "search" }}' aria-label='{{ i18n "search" }}'>
             </form>
         </div>
     </div>
     <div class="row">{{partial "header-menu.html" .}}</div>
+    {{partial "search.html" .}}
 </nav>

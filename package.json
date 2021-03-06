@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "index": "hes -i 'content/**' -o 'search/entries.json'"
+    "index": "node_modules/.bin/grunt lunr-index"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,10 @@
     "url": "https://github.com/oclus/oclus.github.io/issues"
   },
   "homepage": "https://github.com/oclus/oclus.github.io#readme",
-  "dependencies": {
-    "hugo-elasticsearch": "^1.1.4"
+  "devDependencies": {
+    "grunt": "^1.3.0",
+    "grunt-cli": "^1.3.2",
+    "string": "^3.3.3",
+    "yamljs": "^0.3.0"
   }
 }
