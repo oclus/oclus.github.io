@@ -1,0 +1,26 @@
+{
+  "name": "oclus.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "index": "hes -i 'content/**' -o 'search/entries.json'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oclus/oclus.github.io.git"
+  },
+  "keywords": [],
+  "author": "https://github.com/gocs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oclus/oclus.github.io/issues"
+  },
+  "homepage": "https://github.com/oclus/oclus.github.io#readme",
+  "dependencies": {
+    "hugo-elasticsearch": "^1.1.4"
+  }
+}

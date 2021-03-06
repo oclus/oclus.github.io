@@ -36,6 +36,9 @@ FootnoteReturnLinkContents = "↑"
         "/css/whitespace.css",
         "/css/water.css",
     ]
+    js = [
+        "/js/get-search.js"
+    ]
     github = "https://github.com/oclus"
     reddit = ""
     discord = ""
