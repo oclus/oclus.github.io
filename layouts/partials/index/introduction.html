@@ -3,4 +3,8 @@ This is a placeholder partial for the introduction. Create a file called
 layouts/partials/index/introduction.html in your own site to overwrite this
 placeholder.
 -->
-<div class="bg-img"><img class="center-div" src="{{ `images/no-image.png` | relURL }}" alt="..."></div>
+{{$src := `images/no-image.png`}}
+{{if .Params.introduction}}
+    {{$src = .Params.introduction}}
+{{end}}
+<div class="bg-img frame-img"><img class="center-div" src="{{ $src | relURL }}" alt="..."></div>

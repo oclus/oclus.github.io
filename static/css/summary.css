@@ -22,3 +22,19 @@
 .card-summary {
     padding: 2em 2em;
 }
+
+/* center vertically and horizontally image inside div */
+/* https://stackoverflow.com/a/18869078/6056991 */
+.frame-img {
+    height: 480px; /* Can be anything */
+    position: relative;
+}
+
+.frame-img > img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}

@@ -1,6 +1,12 @@
 <a href="{{ .Permalink }}" class="card-a">
     <div class="card">
-        <div class="bg-img"><img class="center-div" src="{{ `images/holdup.jpg` | relURL }}" alt="..."></div>
+        <div class="bg-img frame-img">
+            {{$src := `images/holdup.jpg`}}
+            {{if and (.Params.assets) (.Params.cover)}}
+                {{$src = printf `images/content/%s/%s` .Params.assets .Params.cover}}
+            {{end}}
+            <img class="center-div" src="{{ $src | relURL }}" alt="...">
+        </div>
         <div class="card-summary">
             <h1>{{ .Title }}</h1>
             <p>{{ if isset .Params "summary" }}{{ .Params.Summary | markdownify }}{{ else }}{{ .Summary | markdownify }}{{ end }}</p>

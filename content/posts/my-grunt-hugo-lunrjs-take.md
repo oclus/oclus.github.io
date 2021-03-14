@@ -2,6 +2,8 @@
 title: "My Grunt Hugo Lunrjs Take"
 date: 2021-03-07T01:27:15+08:00
 draft: false
+assets: "posts/my-grunt-hugo-lunrjs-take"
+cover: "hugo.png"
 tags: ["tutorial", "hugo"]
 ---
 
